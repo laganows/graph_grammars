@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.gg;
+package pl.edu.agh.ki.gg.example;
 
 class MeshData {
     MeshData(double Dx, double Dy, int Nelemx, int Nelemy, int Norder) {

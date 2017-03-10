@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.gg;
+package pl.edu.agh.ki.gg.example;
 
 class Vertex {
     Vertex(Vertex Left, Vertex Middle, Vertex Right, Vertex Parent, String Lab, double Beg, double End, MeshData Mesh) {

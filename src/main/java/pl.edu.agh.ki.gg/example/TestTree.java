@@ -1,4 +1,4 @@
-package pl.edu.agh.ki.gg;
+package pl.edu.agh.ki.gg.example;
 
 class TestTree {
     TestTree() {
