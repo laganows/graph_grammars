@@ -11,6 +11,7 @@ lazy val Version = new {
   lazy val Guava = "21.0"
   lazy val JUnit = "4.12"
   lazy val ScalaTest = "3.0.1"
+  lazy val Lombok = "1.16.16"
 }
 
 libraryDependencies ++= Seq(
@@ -18,6 +19,7 @@ libraryDependencies ++= Seq(
   "org.graphstream" % "gs-ui" % Version.GraphStream,
   "org.graphstream" % "gs-algo" % Version.GraphStream,
   "com.google.guava" % "guava" % Version.Guava,
+  "org.projectlombok" % "lombok" % Version.Lombok,
   "junit" % "junit" % Version.JUnit % Test,
   "org.scalatest" %% "scalatest" % Version.ScalaTest % Test
 )
