@@ -25,7 +25,7 @@ class Executor extends Thread {
             visualizer.displayGraph();
 
             //[(P2)]
-            // TODO
+            // TODO, use p1.getStartVertex() to get start graph construction from P1 production and I as middle vertex
         } catch (InterruptedException | BrokenBarrierException e) {
             e.printStackTrace();
         }

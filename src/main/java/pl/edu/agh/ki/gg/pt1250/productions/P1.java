@@ -9,8 +9,8 @@ import java.util.concurrent.CyclicBarrier;
 
 public class P1 extends Production {
 
-    public P1(Vertex vertex, CyclicBarrier cyclicBarrier, double basicLenght) {
-        super(vertex, cyclicBarrier, basicLenght);
+    public P1(Vertex startVertex, CyclicBarrier cyclicBarrier, double basicLenght) {
+        super(startVertex, cyclicBarrier, basicLenght);
     }
 
     /*
