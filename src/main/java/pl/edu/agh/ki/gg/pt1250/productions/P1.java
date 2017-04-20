@@ -9,8 +9,13 @@ import java.util.concurrent.CyclicBarrier;
 
 public class P1 extends Production {
 
-    public P1(Vertex startVertex, CyclicBarrier cyclicBarrier, double basicLenght) {
-        super(startVertex, cyclicBarrier, basicLenght);
+    private double dx;
+    private double dy;
+
+    public P1(Vertex startVertex, CyclicBarrier cyclicBarrier, double basicLength) {
+        super(startVertex, cyclicBarrier, basicLength);
+        this.dx = startVertex.getX();
+        this.dy = startVertex.getY();
     }
 
     /*
@@ -21,44 +26,52 @@ public class P1 extends Production {
         |     /     \     |
         |    /       \    |
         V(v4)--B(b4)--V(v3)
+
+        v -> startVertex
      */
     @Override
-    Vertex apply(Vertex v, double basicLength) {
-        checkApplicability(v);
-        v.setLabel(Label.I);
-        double dx = v.getX();
-        double dy = v.getY();
+    Vertex apply(Vertex startVertex) {
+        checkApplicability(startVertex);
+        startVertex.setLabel(Label.I);
 
-        Vertex v1 = new Vertex(Label.NONE, Direction.NW.getXMultiplier() * basicLength + dx, Direction.NW.getYMultiplier() * basicLength + dy);
-        Vertex v2 = new Vertex(Label.NONE, Direction.NE.getXMultiplier() * basicLength + dx, Direction.NE.getYMultiplier() * basicLength + dy);
-        Vertex v3 = new Vertex(Label.NONE, Direction.SE.getXMultiplier() * basicLength + dx, Direction.SE.getYMultiplier() * basicLength + dy);
-        Vertex v4 = new Vertex(Label.NONE, Direction.SW.getXMultiplier() * basicLength + dx, Direction.SW.getYMultiplier() * basicLength + dy);
-        v.addNeighbour(v1, Direction.NW);
-        v.addNeighbour(v2, Direction.NE);
-        v.addNeighbour(v3, Direction.SW);
-        v.addNeighbour(v4, Direction.SE);
+        Vertex v1 = new Vertex(Label.NONE, calculateCoordinationX(Direction.NW), calculateCoordinationY(Direction.NW));
+        Vertex v2 = new Vertex(Label.NONE, calculateCoordinationX(Direction.NE), calculateCoordinationY(Direction.NE));
+        Vertex v3 = new Vertex(Label.NONE, calculateCoordinationX(Direction.SE), calculateCoordinationY(Direction.SE));
+        Vertex v4 = new Vertex(Label.NONE, calculateCoordinationX(Direction.SW), calculateCoordinationY(Direction.SW));
+        startVertex.addNeighbour(v1, Direction.NW);
+        startVertex.addNeighbour(v2, Direction.NE);
+        startVertex.addNeighbour(v3, Direction.SW);
+        startVertex.addNeighbour(v4, Direction.SE);
 
-        Vertex b1 = new Vertex(Label.B, Direction.W.getXMultiplier() * basicLength + dx, Direction.W.getYMultiplier() * basicLength + dy);
+        Vertex b1 = new Vertex(Label.B, calculateCoordinationX(Direction.W), calculateCoordinationY(Direction.W));
         b1.addNeighbour(v4, Direction.S);
         b1.addNeighbour(v1, Direction.N);
 
-        Vertex b2 = new Vertex(Label.B,Direction.N.getXMultiplier() * basicLength + dx, Direction.N.getYMultiplier() * basicLength + dy);
+        Vertex b2 = new Vertex(Label.B, calculateCoordinationX(Direction.N), calculateCoordinationY(Direction.N));
         b2.addNeighbour(v1, Direction.W);
         b2.addNeighbour(v2, Direction.E);
 
-        Vertex b3 = new Vertex(Label.B, Direction.E.getXMultiplier() * basicLength + dx, Direction.E.getYMultiplier() * basicLength + dy);
+        Vertex b3 = new Vertex(Label.B, calculateCoordinationX(Direction.E), calculateCoordinationY(Direction.E));
         b3.addNeighbour(v2, Direction.N);
         b3.addNeighbour(v3, Direction.S);
 
-        Vertex b4 = new Vertex(Label.B, Direction.S.getXMultiplier() * basicLength + dx, Direction.S.getYMultiplier() * basicLength + dy);
+        Vertex b4 = new Vertex(Label.B, calculateCoordinationX(Direction.S), calculateCoordinationY(Direction.S));
         b4.addNeighbour(v3, Direction.E);
         b4.addNeighbour(v4, Direction.W);
 
-        return v;
+        return startVertex;
     }
 
     @Override
     void checkApplicability(Vertex v) {
-        if (!v.getLabel().equals(Label.S)) throw new IllegalArgumentException("Cannot apply P1 production for " + v.getLabel().getTextLabel());
+        if (!v.getLabel().equals(Label.S))  throw new IllegalArgumentException("Cannot apply P1 production for " + v.getLabel().getTextLabel());
+    }
+
+    private double calculateCoordinationX(Direction direction) {
+        return direction.getXMultiplier() * this.getBasicLength() + dx;
+    }
+
+    private double calculateCoordinationY(Direction direction) {
+        return direction.getYMultiplier() * this.getBasicLength() + dy;
     }
 }
