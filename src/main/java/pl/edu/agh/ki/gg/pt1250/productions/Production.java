@@ -16,7 +16,7 @@ public abstract class Production extends Thread {
 
     abstract Vertex apply(Vertex v);
 
-    abstract void checkApplicability(Vertex v);
+    abstract boolean checkApplicability(Vertex v);
 
     public void run() {
         //apply the production

@@ -1,6 +1,7 @@
 package pl.edu.agh.ki.gg.pt1250.productions;
 
 
+import org.apache.log4j.Logger;
 import pl.edu.agh.ki.gg.pt1250.model.Direction;
 import pl.edu.agh.ki.gg.pt1250.model.Label;
 import pl.edu.agh.ki.gg.pt1250.model.Vertex;
@@ -11,6 +12,7 @@ public class P1 extends Production {
 
     private double dx;
     private double dy;
+    private Logger LOGGER = Logger.getLogger(P1.class);
 
     public P1(Vertex startVertex, CyclicBarrier cyclicBarrier, double basicLength) {
         super(startVertex, cyclicBarrier, basicLength);
@@ -31,7 +33,7 @@ public class P1 extends Production {
      */
     @Override
     Vertex apply(Vertex startVertex) {
-        checkApplicability(startVertex);
+        if (!checkApplicability(startVertex)) return startVertex;
         startVertex.setLabel(Label.I);
 
         Vertex v1 = new Vertex(Label.NONE, calculateCoordinationX(Direction.NW), calculateCoordinationY(Direction.NW));
@@ -63,8 +65,11 @@ public class P1 extends Production {
     }
 
     @Override
-    void checkApplicability(Vertex v) {
-        if (!v.getLabel().equals(Label.S))  throw new IllegalArgumentException("Cannot apply P1 production for " + v.getLabel().getTextLabel());
+    boolean checkApplicability(Vertex v) {
+        if (!v.getLabel().equals(Label.S) || v.getNeighbours().size() != 0) {
+            LOGGER.debug("Couldn't apply production P1 for " + v.getLabel());
+            return false;
+        } else return true;
     }
 
     private double calculateCoordinationX(Direction direction) {
