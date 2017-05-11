@@ -3,6 +3,7 @@ package pl.edu.agh.ki.gg.pt1250;
 import pl.edu.agh.ki.gg.pt1250.model.Label;
 import pl.edu.agh.ki.gg.pt1250.model.Vertex;
 import pl.edu.agh.ki.gg.pt1250.productions.P1;
+import pl.edu.agh.ki.gg.pt1250.productions.P2;
 import pl.edu.agh.ki.gg.pt1250.visualization.Visualizer;
 
 import java.util.concurrent.BrokenBarrierException;
@@ -25,7 +26,15 @@ class Executor extends Thread {
             visualizer.displayGraph();
 
             //[(P2)]
-            // TODO, use s vertex to get start graph construction from P1 production and I in the middle
+            barrier = new CyclicBarrier(2);
+            P2 p2 = new P2(s, barrier, BASIC_UNIT_LENGTH/2);
+            p2.start();
+            barrier.await();
+
+            Visualizer visualizer2 = new Visualizer();
+            visualizer2.visualizeGraph(s);
+            visualizer2.displayGraph();
+
         } catch (InterruptedException | BrokenBarrierException e) {
             e.printStackTrace();
         }

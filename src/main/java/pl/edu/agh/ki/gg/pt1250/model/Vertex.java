@@ -48,7 +48,7 @@ public class Vertex {
         }
     }
 
-    private Vertex getNeighbourInDirection(Direction direction) {
+    public Vertex getNeighbourInDirection(Direction direction) {
         return this.neighbours.entrySet().stream()
                 .filter((e -> e.getValue().equals(direction)))
                 .map(Map.Entry::getKey)

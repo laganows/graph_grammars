@@ -42,8 +42,8 @@ public class P1 extends Production {
         Vertex v4 = new Vertex(Label.NONE, calculateCoordinationX(Direction.SW), calculateCoordinationY(Direction.SW));
         startVertex.addNeighbour(v1, Direction.NW);
         startVertex.addNeighbour(v2, Direction.NE);
-        startVertex.addNeighbour(v3, Direction.SW);
-        startVertex.addNeighbour(v4, Direction.SE);
+        startVertex.addNeighbour(v3, Direction.SE);
+        startVertex.addNeighbour(v4, Direction.SW);
 
         Vertex b1 = new Vertex(Label.B, calculateCoordinationX(Direction.W), calculateCoordinationY(Direction.W));
         b1.addNeighbour(v4, Direction.S);
