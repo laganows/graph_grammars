@@ -1,5 +1,6 @@
 package pl.edu.agh.ki.gg.pt1250;
 
+import pl.edu.agh.ki.gg.pt1250.model.Direction;
 import pl.edu.agh.ki.gg.pt1250.model.Label;
 import pl.edu.agh.ki.gg.pt1250.model.Vertex;
 import pl.edu.agh.ki.gg.pt1250.productions.P1;
@@ -16,7 +17,7 @@ class Executor extends Thread {
         try {
             Vertex s = new Vertex(Label.S, BASIC_UNIT_LENGTH, BASIC_UNIT_LENGTH);
             //[(P1)]
-            CyclicBarrier barrier = new CyclicBarrier(1);
+            CyclicBarrier barrier = new CyclicBarrier(2);
             P1 p1 = new P1(s, barrier, BASIC_UNIT_LENGTH);
             p1.start();
             barrier.await();
