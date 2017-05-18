@@ -23,5 +23,6 @@ libraryDependencies ++= Seq(
   "org.projectlombok" % "lombok" % Version.Lombok,
   "log4j" % "log4j" % Version.Log4j,
   "junit" % "junit" % Version.JUnit % Test,
-  "org.scalatest" %% "scalatest" % Version.ScalaTest % Test
+  "org.scalatest" %% "scalatest" % Version.ScalaTest % Test,
+  "org.hamcrest" % "hamcrest-library" % "1.3"
 )
