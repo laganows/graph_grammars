@@ -5,6 +5,7 @@ import pl.edu.agh.ki.gg.pt1250.model.Label;
 import pl.edu.agh.ki.gg.pt1250.model.Vertex;
 import pl.edu.agh.ki.gg.pt1250.productions.P1;
 import pl.edu.agh.ki.gg.pt1250.productions.P2;
+import pl.edu.agh.ki.gg.pt1250.productions.P3;
 import pl.edu.agh.ki.gg.pt1250.visualization.Visualizer;
 
 import java.util.concurrent.BrokenBarrierException;
@@ -26,6 +27,12 @@ class Executor extends Thread {
             barrier = new CyclicBarrier(2);
             P2 p2 = new P2(s, barrier, BASIC_UNIT_LENGTH/2);
             p2.start();
+            barrier.await();
+
+            //[(P3)]
+            barrier = new CyclicBarrier(2);
+            P3 p3 = new P3(s, barrier, BASIC_UNIT_LENGTH/2);
+            p3.start();
             barrier.await();
 
             displayGraph(s);
