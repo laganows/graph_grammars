@@ -54,12 +54,12 @@ public class P3 extends Production {
                     BVertex.addNeighbour(newVertex, rightDirection.getClockwiseNextDirection());
 
                     if (!leftVertex.getNeighbours().containsValue(rightDirection.getOppositeDirection())) {
-                        newVertex = new Vertex(Label.F1, calculateCoordinationX2(leftDirection.getCounterClockwiseNextDirection(), leftDirection.getCounterClockwiseNextDirection()),
+                        newVertex = new Vertex(Label.NONE, calculateCoordinationX2(leftDirection.getCounterClockwiseNextDirection(), leftDirection.getCounterClockwiseNextDirection()),
                                 calculateCoordinationY2(leftDirection.getCounterClockwiseNextDirection(), leftDirection.getCounterClockwiseNextDirection()));
                         leftVertex.addNeighbour(newVertex, rightDirection.getOppositeDirection());
                     }
                     if (!rightVertex.getNeighbours().containsValue(leftDirection.getOppositeDirection())) {
-                        newVertex = new Vertex(Label.S, calculateCoordinationX2(rightDirection.getClockwiseNextDirection(), rightDirection.getClockwiseNextDirection()),
+                        newVertex = new Vertex(Label.NONE, calculateCoordinationX2(rightDirection.getClockwiseNextDirection(), rightDirection.getClockwiseNextDirection()),
                                 calculateCoordinationY2(rightDirection.getClockwiseNextDirection(), rightDirection.getClockwiseNextDirection()));
                         rightVertex.addNeighbour(newVertex, leftDirection.getOppositeDirection());
                     }
