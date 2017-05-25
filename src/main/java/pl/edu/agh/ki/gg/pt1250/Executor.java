@@ -31,8 +31,21 @@ class Executor extends Thread {
 
             //[(P3)]
             barrier = new CyclicBarrier(2);
-            P3 p3 = new P3(s, barrier, BASIC_UNIT_LENGTH/2);
-            p3.start();
+            P3 p3north = new P3(s, Direction.N, barrier,  BASIC_UNIT_LENGTH/2);
+            p3north.start();
+            barrier.await();
+
+            P3 p3east = new P3(s, Direction.E, barrier,  BASIC_UNIT_LENGTH/2);
+            p3east.start();
+            barrier.await();
+
+            P3 p3south = new P3(s, Direction.S, barrier,  BASIC_UNIT_LENGTH/2);
+            p3south.start();
+            barrier.await();
+
+            barrier = new CyclicBarrier(2);
+            P3 p3west = new P3(s, Direction.W, barrier,  BASIC_UNIT_LENGTH/2);
+            p3west.start();
             barrier.await();
 
             displayGraph(s);

@@ -13,18 +13,21 @@ public class P3 extends Production {
     private double dx;
     private double dy;
     private Logger LOGGER = Logger.getLogger(P1.class);
+    private Direction path;
 
-    public P3(Vertex startVertex, CyclicBarrier cyclicBarrier, double basicLength) {
+    public P3(Vertex startVertex, Direction path, CyclicBarrier cyclicBarrier, double basicLength) {
         super(startVertex, cyclicBarrier, basicLength);
         this.dx = startVertex.getX();
         this.dy = startVertex.getY();
+        this.path = path;
     }
 
     @Override
     Vertex apply(Vertex startVertex) {
         if (!checkApplicability(startVertex)) return startVertex;
 
-        for (Direction leftDirection: EnumSet.of(Direction.NW, Direction.NE, Direction.SW, Direction.SE)) {
+        Direction leftDirection = path.getCounterClockwiseNextDirection();
+
             Vertex leftVertex = startVertex.getNeighbourInDirection(leftDirection);
             Vertex newVertex;
             if (leftVertex.getLabel() == Label.I) {
@@ -65,10 +68,11 @@ public class P3 extends Production {
                     }
                 }
             }
-        }
 
         return startVertex;
     }
+
+
 
     @Override
     boolean checkApplicability(Vertex v) {
@@ -78,9 +82,12 @@ public class P3 extends Production {
         }
 
         for (Direction leftDirection: EnumSet.of(Direction.NW, Direction.NE, Direction.SW, Direction.SE)) {
+
             Direction rightDirection = leftDirection.getClockwiseNextDirection().getClockwiseNextDirection();
 
-            if (v.getNeighbours().containsValue(leftDirection) && v.getNeighbours().containsValue(rightDirection) && v.getNeighbours().containsValue(leftDirection.getClockwiseNextDirection())) {
+            if (v.getNeighbours().containsValue(leftDirection) && v.getNeighbours().containsValue(rightDirection) &&
+                    v.getNeighbours().containsValue(leftDirection.getClockwiseNextDirection())) {
+
                 Vertex leftVertex = v.getNeighbourInDirection(leftDirection);
                 Vertex rightVertex = v.getNeighbourInDirection(rightDirection);
                 Vertex topVertex = v.getNeighbourInDirection(leftDirection.getClockwiseNextDirection());
@@ -100,7 +107,8 @@ public class P3 extends Production {
                 }
             }
         }
-        return true;
+        LOGGER.debug("Couldn't apply production P3 for " + v.getLabel() + ", because stuff");
+        return false;
     }
 
     private double calculateCoordinationX(Direction direction) {
