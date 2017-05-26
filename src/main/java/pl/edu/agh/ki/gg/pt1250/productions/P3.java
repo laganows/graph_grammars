@@ -81,32 +81,32 @@ public class P3 extends Production {
             return false;
         }
 
-        for (Direction leftDirection: EnumSet.of(Direction.NW, Direction.NE, Direction.SW, Direction.SE)) {
+        Direction leftDirection = path.getCounterClockwiseNextDirection();
 
-            Direction rightDirection = leftDirection.getClockwiseNextDirection().getClockwiseNextDirection();
+        Direction rightDirection = leftDirection.getClockwiseNextDirection().getClockwiseNextDirection();
 
-            if (v.getNeighbours().containsValue(leftDirection) && v.getNeighbours().containsValue(rightDirection) &&
-                    v.getNeighbours().containsValue(leftDirection.getClockwiseNextDirection())) {
+        if (v.getNeighbours().containsValue(leftDirection) && v.getNeighbours().containsValue(rightDirection) &&
+                v.getNeighbours().containsValue(leftDirection.getClockwiseNextDirection())) {
 
-                Vertex leftVertex = v.getNeighbourInDirection(leftDirection);
-                Vertex rightVertex = v.getNeighbourInDirection(rightDirection);
-                Vertex topVertex = v.getNeighbourInDirection(leftDirection.getClockwiseNextDirection());
-                Vertex twiceLeft = leftVertex.getNeighbourInDirection(leftDirection);
-                Vertex twiceRight = rightVertex.getNeighbourInDirection(rightDirection);
-                Vertex BVertex = twiceLeft.getNeighbourInDirection(rightDirection.getClockwiseNextDirection());
+            Vertex leftVertex = v.getNeighbourInDirection(leftDirection);
+            Vertex rightVertex = v.getNeighbourInDirection(rightDirection);
+            Vertex topVertex = v.getNeighbourInDirection(leftDirection.getClockwiseNextDirection());
+            Vertex twiceLeft = leftVertex.getNeighbourInDirection(leftDirection);
+            Vertex twiceRight = rightVertex.getNeighbourInDirection(rightDirection);
+            Vertex BVertex = twiceLeft.getNeighbourInDirection(rightDirection.getClockwiseNextDirection());
 
-                double dist1 = Math.sqrt(Math.pow(v.getX() - leftVertex.getX(), 2) + Math.pow(v.getY() - leftVertex.getY(), 2));
-                double dist2 = Math.sqrt(Math.pow(v.getX() - rightVertex.getX(), 2) + Math.pow(v.getY() - rightVertex.getY(), 2));
-                double dist3 = Math.sqrt(Math.pow(v.getX() - topVertex.getX(), 2) + Math.pow(v.getY() - topVertex.getY(), 2));
-                double dist4 = Math.sqrt(Math.pow(v.getX() - twiceLeft.getX(), 2) + Math.pow(v.getY() - twiceLeft.getY(), 2));
-                double dist5 = Math.sqrt(Math.pow(v.getX() - twiceRight.getX(), 2) + Math.pow(v.getY() - twiceRight.getY(), 2));
-                double dist6 = Math.sqrt(Math.pow(v.getX() - BVertex.getX(), 2) + Math.pow(v.getY() - BVertex.getY(), 2));
+            double dist1 = Math.sqrt(Math.pow(v.getX() - leftVertex.getX(), 2) + Math.pow(v.getY() - leftVertex.getY(), 2));
+            double dist2 = Math.sqrt(Math.pow(v.getX() - rightVertex.getX(), 2) + Math.pow(v.getY() - rightVertex.getY(), 2));
+            double dist3 = Math.sqrt(Math.pow(v.getX() - topVertex.getX(), 2) + Math.pow(v.getY() - topVertex.getY(), 2));
+            double dist4 = Math.sqrt(Math.pow(v.getX() - twiceLeft.getX(), 2) + Math.pow(v.getY() - twiceLeft.getY(), 2));
+            double dist5 = Math.sqrt(Math.pow(v.getX() - twiceRight.getX(), 2) + Math.pow(v.getY() - twiceRight.getY(), 2));
+            double dist6 = Math.sqrt(Math.pow(v.getX() - BVertex.getX(), 2) + Math.pow(v.getY() - BVertex.getY(), 2));
 
-                if (dist1 == dist2 && dist3*2 == dist6 && dist4 == dist5) {
-                    return true;
-                }
+            if (dist1 == dist2 && dist3 * 2 == dist6 && dist4 == dist5) {
+                return true;
             }
         }
+
         LOGGER.debug("Couldn't apply production P3 for " + v.getLabel() + ", because stuff");
         return false;
     }
