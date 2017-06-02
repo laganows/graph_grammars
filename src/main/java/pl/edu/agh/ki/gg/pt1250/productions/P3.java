@@ -48,11 +48,15 @@ public class P3 extends Production {
                     rightVertex.addNeighbour(BVertex, leftDirection);
                     topVertex.addNeighbour(BVertex, leftDirection.getClockwiseNextDirection());
 
-                    newVertex = new Vertex(Label.B, calculateCoordinationX2(leftDirection, leftDirection.getClockwiseNextDirection()), calculateCoordinationY2(leftDirection, leftDirection.getClockwiseNextDirection()));
+                    //new vertex on the left side
+                    newVertex = new Vertex(Label.B, calculateCoordinationX2(leftDirection, leftDirection.getClockwiseNextDirection()),
+                            calculateCoordinationY2(leftDirection, leftDirection.getClockwiseNextDirection()));
                     twiceLeft.addNeighbour(newVertex, rightDirection.getClockwiseNextDirection());
                     BVertex.addNeighbour(newVertex, leftDirection.getCounterClockwiseNextDirection());
 
-                    newVertex = new Vertex(Label.B, calculateCoordinationX2(rightDirection, leftDirection.getClockwiseNextDirection()), calculateCoordinationY2(rightDirection, leftDirection.getClockwiseNextDirection()));
+                    //new vertex on the right side
+                    newVertex = new Vertex(Label.B, calculateCoordinationX2(rightDirection, leftDirection.getClockwiseNextDirection()),
+                            calculateCoordinationY2(rightDirection, leftDirection.getClockwiseNextDirection()));
                     twiceRight.addNeighbour(newVertex, leftDirection.getCounterClockwiseNextDirection());
                     BVertex.addNeighbour(newVertex, rightDirection.getClockwiseNextDirection());
 
@@ -107,7 +111,7 @@ public class P3 extends Production {
             }
         }
 
-        LOGGER.debug("Couldn't apply production P3 for " + v.getLabel() + ", because stuff");
+        LOGGER.debug("Couldn't apply production P3 for " + v.getLabel() + ", because graph is not correct");
         return false;
     }
 
