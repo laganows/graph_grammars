@@ -1,34 +1,34 @@
 node.S {
     shape: box;
-    size: 30px, 30px;
+    size: 20px, 20px;
     fill-mode: image-scaled;
     fill-image: url('file:src/main/resources/css/S.png');
 }
 
 node.I {
     shape: box;
-    size: 30px, 30px;
+    size: 20px, 20px;
     fill-mode: image-scaled;
     fill-image: url('file:src/main/resources/css/I.png');
 }
 
 node.F1 {
     shape: box;
-    size: 30px, 30px;
+    size: 20px, 20px;
     fill-mode: image-scaled;
     fill-image: url('file:src/main/resources/css/F1.png');
 }
 
 node.A {
     shape: box;
-    size: 30px, 30px;
+    size: 20px, 20px;
     fill-mode: image-scaled;
     fill-image: url('file:src/main/resources/css/A.png');
 }
 
 node.B {
     shape: box;
-    size: 30px, 30px;
+    size: 20px, 20px;
     fill-mode: image-scaled;
     fill-image: url('file:src/main/resources/css/B.png');
 }
