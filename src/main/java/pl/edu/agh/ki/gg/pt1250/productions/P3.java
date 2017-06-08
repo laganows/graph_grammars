@@ -122,10 +122,10 @@ public class P3 extends Production {
     private double calculateCoordinationX2(Direction direction, Direction direction2) {
         double tmp = direction.getXMultiplier() * this.getBasicLength() + dx;
         if (direction2 == Direction.E) {
-            tmp += 2;
+            tmp += this.getBasicLength();
         }
         else if (direction2 == Direction.W) {
-            tmp -=2;
+            tmp -=this.getBasicLength();
         }
         return tmp;
     }
@@ -137,10 +137,10 @@ public class P3 extends Production {
     private double calculateCoordinationY2(Direction direction, Direction direction2) {
         double tmp = direction.getYMultiplier() * this.getBasicLength() + dy;
         if (direction2 == Direction.N) {
-            tmp += 2;
+            tmp += this.getBasicLength();
         }
         else if (direction2 == Direction.S) {
-            tmp -=2;
+            tmp -=this.getBasicLength();
         }
         return tmp;
     }
