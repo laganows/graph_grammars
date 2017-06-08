@@ -36,8 +36,36 @@ public enum Direction {
         SE.oppositeDirection = NW;
     }
 
+    static {
+        N.clockwiseNextDirection = NE;
+        NE.clockwiseNextDirection = E;
+        E.clockwiseNextDirection = SE;
+        SE.clockwiseNextDirection = S;
+        S.clockwiseNextDirection = SW;
+        SW.clockwiseNextDirection = W;
+        W.clockwiseNextDirection = NW;
+        NW.clockwiseNextDirection = N;
+    }
+
+    static {
+        N.counterClockwiseNextDirection = NW;
+        NW.counterClockwiseNextDirection = W;
+        W.counterClockwiseNextDirection = SW;
+        SW.counterClockwiseNextDirection = S;
+        S.counterClockwiseNextDirection = SE;
+        SE.counterClockwiseNextDirection = E;
+        E.counterClockwiseNextDirection = NE;
+        NE.counterClockwiseNextDirection = N;
+    }
+
     @Getter
     private Direction oppositeDirection;
+
+    @Getter
+    private Direction clockwiseNextDirection;
+
+    @Getter
+    private Direction counterClockwiseNextDirection;
 
     @Getter
     private int xMultiplier;
