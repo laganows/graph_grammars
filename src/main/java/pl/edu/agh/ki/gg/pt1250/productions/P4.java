@@ -23,36 +23,36 @@ public class P4 extends Production {
     @Override
     Vertex apply(Vertex startVertex) {
         if (!checkApplicability(startVertex)) return startVertex;
-        startVertex.setLabel(Label.NONE);
+
         Direction startDir = null;
         Direction pointerToStart = null;
         Direction nextNeigh = null;
 
         if (startVertex.getNeighbours().containsValue(Direction.N)) {
             startDir = Direction.N;
-            pointerToStart = Direction.SE;
             nextNeigh = Direction.SE;
         } else if(startVertex.getNeighbours().containsValue(Direction.E)) {
             startDir = Direction.E;
-            pointerToStart = Direction.NE;
             nextNeigh = Direction.SW;
         }
+        pointerToStart = Direction.NE;
         Vertex current = startVertex.getNeighbourInDirection(startDir).
                 getNeighbourInDirection(nextNeigh);
 
         // sometimes I like C old school style
         for(int i =0;i<8; i++){
             if(current.getLabel().equals(Label.I)) {
-                current.addNeighbour(startVertex, pointerToStart);
+                startVertex.addNeighbour(current, pointerToStart);
             }else{
                 for (Direction direction: EnumSet.of(Direction.N, Direction.E, Direction.S, Direction.W)) {
                     if (current.getNeighbours().containsValue(direction)){
                         Vertex maybeF = current.getNeighbourInDirection(direction);
-                        if(maybeF.getLabel().equals(Label.F1)){
-                            if(!maybeF.equals(current))
-                                maybeF.addNeighbour(startVertex, direction.getOppositeDirection());
-                            else{
-                                current.removeNeighbour(direction);
+                        if(maybeF.getLabel().equals(Label.F1)) {
+                            if (!maybeF.equals(startVertex)) {
+                                startVertex.addNeighbour(maybeF, direction.getOppositeDirection());
+
+                            } else {
+                                startVertex.removeNeighbour(direction.getOppositeDirection());
                                 Vertex newV = new Vertex(Label.F1,
                                         calculateCoordinationX(direction),
                                         calculateCoordinationY(direction));
@@ -69,6 +69,7 @@ public class P4 extends Production {
             current = current.getNeighbourInDirection(nextNeigh);
             pointerToStart = pointerToStart.getClockwiseNextDirection();
         }
+        startVertex.setLabel(Label.NONE);
         return startVertex;
     }
 
@@ -88,6 +89,7 @@ public class P4 extends Production {
         }
         Direction dir1 = null;
         Direction startDir1 = null;
+        Vertex firstI = null, secondV = null;
         for (Direction d: EnumSet.of(Direction.N, Direction.S)) {
             if (v.getNeighbours().containsValue(d)) {
                 startDir1 = d;
@@ -97,34 +99,47 @@ public class P4 extends Production {
                 startDir1 = d;
                 dir1 = d.getClockwiseNextDirection().getClockwiseNextDirection().getClockwiseNextDirection();
             }
-            Vertex firstI = v.getNeighbourInDirection(startDir1).getNeighbourInDirection(dir1);
-            if (!firstI.getLabel().equals(Label.I)) {
-                LOGGER.debug("Couldn't apply production P4 for " + firstI.getLabel() + ", because contains wrong label");
-                return false;
+            if(v.getNeighbours().containsValue(startDir1)) {
+                firstI = v.getNeighbourInDirection(startDir1).getNeighbourInDirection(dir1);
+                if (!firstI.getLabel().equals(Label.I)) {
+                    LOGGER.debug("Couldn't apply production P4 for " + firstI.getLabel() + ", because contains wrong label");
+                    return false;
+                }
             }
-            Vertex secondV = firstI.getNeighbourInDirection(dir1).getNeighbourInDirection(dir1);
-            if (!secondV.getLabel().equals(Label.NONE)) {
-                LOGGER.debug("Couldn't apply production P4 for " + secondV.getLabel() + ", because contains wrong label");
-                return false;
-            }
-            Direction Fdir = dir1.getClockwiseNextDirection().getClockwiseNextDirection().getClockwiseNextDirection();
-            if(!secondV.getNeighbours().containsValue(Fdir)){
-                LOGGER.debug("Couldn't apply production P4 for " + secondV.getLabel() + ", because doesnt containt F1 neighbour");
-                return false;
-            }
-            if(!secondV.getNeighbourInDirection(Fdir).getLabel().equals(Label.F1)){
-                LOGGER.debug("Couldn't apply production P4 for " + secondV.getLabel() + ", because doesnt containt F1 neighbour");
-                return false;
-            }
-            
-            Vertex thirdI = secondV.getNeighbourInDirection(
-                    dir1.getOppositeDirection().getOppositeDirection()).getNeighbourInDirection(dir1);
 
-            if (!thirdI.getLabel().equals(Label.I)) {
-                LOGGER.debug("Couldn't apply production P4 for " + thirdI.getLabel() + ", because contains wrong label");
+            if(firstI.getNeighbours().containsValue(dir1)) {
+                secondV = firstI.getNeighbourInDirection(dir1);
+                if (!secondV.getLabel().equals(Label.NONE)) {
+                    LOGGER.debug("Couldn't apply production P4 for " + secondV.getLabel() + ", because contains wrong label");
+                    return false;
+                }
+
+            }
+            if(secondV== null){
+                LOGGER.debug("Couldn't apply production P4 for neighbour of " + firstI.getLabel() +
+                        "because no neighbour in direction " + dir1);
                 return false;
+            }
+            Direction Fdir = dir1.getClockwiseNextDirection().getClockwiseNextDirection();
+            if(!secondV.getNeighbours().containsValue(Fdir)){
+                LOGGER.debug("Couldn't apply production P4 for " + secondV.getLabel() + " because doesnt contain neighbour in direction " + dir1);
+                return false;
+            }
+            if(secondV.getNeighbourInDirection(Fdir) == null ||
+                    !secondV.getNeighbourInDirection(Fdir.getClockwiseNextDirection()).getLabel().equals(Label.F1)){
+                LOGGER.debug("Couldn't apply production P4 for " + secondV.getLabel() + " , because doesnt containt F1 neighbour.");
+                return false;
+            }
+            if(secondV.getNeighbours().containsValue(dir1.getClockwiseNextDirection().getClockwiseNextDirection())) {
+                Vertex thirdI = secondV.getNeighbourInDirection(
+                        dir1.getClockwiseNextDirection().getClockwiseNextDirection());
+                if (!thirdI.getLabel().equals(Label.I)) {
+                    LOGGER.debug("Couldn't apply production P4 for " + thirdI.getLabel() + ", because contains wrong label");
+                    return false;
+                }
             }
         }
+
 
 
         return true;
