@@ -50,6 +50,20 @@ class Executor extends Thread {
             p3west.start();
             barrier.await();
 
+            //[(P2) (P2) (P2)]
+            barrier = new CyclicBarrier(2);
+            P2 p2northEast = new P2(s.getNeighbourInDirection(Direction.NE), barrier, BASIC_UNIT_LENGTH/4);
+            p2northEast.start();
+            barrier.await();
+
+            P2 p2southEast = new P2(s.getNeighbourInDirection(Direction.SE), barrier, BASIC_UNIT_LENGTH/4);
+            p2southEast.start();
+            barrier.await();
+
+            P2 p2southWest = new P2(s.getNeighbourInDirection(Direction.SW), barrier, BASIC_UNIT_LENGTH/4);
+            p2southWest.start();
+            barrier.await();
+
             displayGraph(s);
 
         } catch (InterruptedException | BrokenBarrierException e) {
