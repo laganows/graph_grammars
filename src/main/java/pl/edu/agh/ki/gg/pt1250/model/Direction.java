@@ -46,20 +46,6 @@ public enum Direction {
         NW.clockwiseNextDirection = N;
     }
 
-    @Getter
-    private Direction clockwiseNextDirection;
-
-    static {
-        N.clockwiseNextDirection = NE;
-        NE.clockwiseNextDirection = E;
-        E.clockwiseNextDirection = SE;
-        SE.clockwiseNextDirection = S;
-        S.clockwiseNextDirection = SW;
-        SW.clockwiseNextDirection = W;
-        W.clockwiseNextDirection = NW;
-        NW.clockwiseNextDirection = N;
-    }
-
     static {
         N.counterClockwiseNextDirection = NW;
         NW.counterClockwiseNextDirection = W;
