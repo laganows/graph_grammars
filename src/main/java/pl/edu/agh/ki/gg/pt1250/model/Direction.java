@@ -35,7 +35,6 @@ public enum Direction {
         SW.oppositeDirection = NE;
         SE.oppositeDirection = NW;
     }
-
     static {
         N.clockwiseNextDirection = NE;
         NE.clockwiseNextDirection = E;
