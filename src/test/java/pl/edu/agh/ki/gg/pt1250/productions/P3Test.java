@@ -48,8 +48,10 @@ public class P3Test {
         assertTrue(verticesEquals(start.getNeighbourInDirection(Direction.NW), result.getNeighbourInDirection(Direction.NW)));
         assertTrue(verticesEquals(start.getNeighbourInDirection(Direction.NW).getNeighbourInDirection(Direction.NW),
                 result.getNeighbourInDirection(Direction.NW).getNeighbourInDirection(Direction.NW)));
+
         assertTrue(verticesEquals(start.getNeighbourInDirection(Direction.NW).getNeighbourInDirection(Direction.SW),
                 result.getNeighbourInDirection(Direction.NW).getNeighbourInDirection(Direction.SW)));
+
         assertTrue(verticesEquals(start.getNeighbourInDirection(Direction.NW).getNeighbourInDirection(Direction.NE),
                 result.getNeighbourInDirection(Direction.NW).getNeighbourInDirection(Direction.NE)));
         assertTrue(verticesEquals(start.getNeighbourInDirection(Direction.NW).getNeighbourInDirection(Direction.NW)
@@ -97,13 +99,16 @@ public class P3Test {
 
         Vertex top = new Vertex(Label.F1, calculateCoordinationX2(Direction.N,Direction.N), calculateCoordinationY2(Direction.N, Direction.NE));
         Vertex leftTop = new Vertex(Label.I, calculateCoordinationX2(Direction.NW,Direction.NW)*2, calculateCoordinationY2(Direction.NW, Direction.NW)*2);
+        Vertex leftDown = new Vertex(Label.NONE, calculateCoordinationX2(Direction.SW,Direction.SW)*2, 0);
         Vertex rightTop = new Vertex(Label.I, calculateCoordinationX2(Direction.NE, Direction.NE)*2, calculateCoordinationY2(Direction.NE, Direction.NE)*2);
+        Vertex rightDown = new Vertex(Label.NONE, calculateCoordinationX2(Direction.SE,Direction.SE)*2, 0);
 
         Vertex b = new Vertex(Label.F1, calculateCoordinationX2(Direction.N, Direction.N), calculateCoordinationY2(Direction.N, Direction.N));
 
         //left side
         start.addNeighbour(left, Direction.NW);
         left.addNeighbour(leftTop, Direction.NW);
+        left.addNeighbour(leftDown, Direction.SW);
         leftTop.addNeighbour(b, Direction.E);
 
         start.addNeighbour(top, Direction.N);
@@ -111,6 +116,7 @@ public class P3Test {
         //right side
         start.addNeighbour(right, Direction.NE);
         right.addNeighbour(rightTop, Direction.NE);
+        right.addNeighbour(rightDown, Direction.SE);
         rightTop.addNeighbour(b, Direction.W);
 
         return start;

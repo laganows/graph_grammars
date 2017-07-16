@@ -3,9 +3,7 @@ package pl.edu.agh.ki.gg.pt1250;
 import pl.edu.agh.ki.gg.pt1250.model.Direction;
 import pl.edu.agh.ki.gg.pt1250.model.Label;
 import pl.edu.agh.ki.gg.pt1250.model.Vertex;
-import pl.edu.agh.ki.gg.pt1250.productions.P1;
-import pl.edu.agh.ki.gg.pt1250.productions.P2;
-import pl.edu.agh.ki.gg.pt1250.productions.P3;
+import pl.edu.agh.ki.gg.pt1250.productions.*;
 import pl.edu.agh.ki.gg.pt1250.visualization.Visualizer;
 
 import java.util.concurrent.BrokenBarrierException;
@@ -25,11 +23,15 @@ class Executor extends Thread {
             p1.start();
             barrier.await();
 
+            displayGraph(s);
+
             //[(P2)]
             barrier = new CyclicBarrier(2);
             P2 p2 = new P2(s, barrier, BASIC_UNIT_LENGTH/2);
             p2.start();
             barrier.await();
+
+            displayGraph(s);
 
             //[(P3)]
             barrier = new CyclicBarrier(2);
@@ -52,6 +54,8 @@ class Executor extends Thread {
             p3west.start();
             barrier.await();
 
+            displayGraph(s);
+
             //[(P2) (P2) (P2)]
             barrier = new CyclicBarrier(2);
             P2 p2northEast = new P2(s.getNeighbourInDirection(NE), barrier, BASIC_UNIT_LENGTH/4);
@@ -65,6 +69,8 @@ class Executor extends Thread {
             P2 p2southWest = new P2(s.getNeighbourInDirection(Direction.SW), barrier, BASIC_UNIT_LENGTH/4);
             p2southWest.start();
             barrier.await();
+
+            displayGraph(s);
 
             //[(P3) x 6]
             P3 northEastNorth = new P3(s.getNeighbourInDirection(NE).getNeighbourInDirection(NE), N, barrier, BASIC_UNIT_LENGTH/4);
@@ -89,6 +95,17 @@ class Executor extends Thread {
 
             P3 southWestWest = new P3(s.getNeighbourInDirection(SW).getNeighbourInDirection(SW), W, barrier, BASIC_UNIT_LENGTH/4);
             southWestWest.start();
+            barrier.await();
+
+            displayGraph(s);
+
+            barrier = new CyclicBarrier(2);
+            P4 p4South = new P4(s.getNeighbourInDirection(S), barrier, BASIC_UNIT_LENGTH/4);
+            p4South.start();
+            barrier.await();
+
+            P4 p4East = new P4(s.getNeighbourInDirection(E), barrier, BASIC_UNIT_LENGTH/4);
+            p4East.start();
             barrier.await();
 
             displayGraph(s);
