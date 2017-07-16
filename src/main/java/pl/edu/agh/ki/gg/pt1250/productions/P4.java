@@ -4,15 +4,16 @@ import org.apache.log4j.Logger;
 import pl.edu.agh.ki.gg.pt1250.model.Direction;
 import pl.edu.agh.ki.gg.pt1250.model.Label;
 import pl.edu.agh.ki.gg.pt1250.model.Vertex;
+import pl.edu.agh.ki.gg.pt1250.utils.DirectionUtil;
 
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.concurrent.CyclicBarrier;
 
 public class P4 extends Production {
-
     private double dx;
     private double dy;
-    private Logger LOGGER = Logger.getLogger(P1.class);
+    private Logger LOGGER = Logger.getLogger(P4.class);
 
     public P4(Vertex startVertex, CyclicBarrier cyclicBarrier, double basicLength) {
         super(startVertex, cyclicBarrier, basicLength);
@@ -21,56 +22,31 @@ public class P4 extends Production {
     }
 
     @Override
-    Vertex apply(Vertex startVertex) {
-        if (!checkApplicability(startVertex)) return startVertex;
+    Vertex apply(Vertex v) {
+        if (!checkApplicability(v)) return v;
 
-        Direction startDir = null;
-        Direction pointerToStart = null;
-        Direction nextNeigh = null;
+        Direction nextDirection1 = Direction.N;
+        Direction nextDirection2 = Direction.S;
 
-        if (startVertex.getNeighbours().containsValue(Direction.N)) {
-            startDir = Direction.N;
-            nextNeigh = Direction.SE;
-        } else if(startVertex.getNeighbours().containsValue(Direction.E)) {
-            startDir = Direction.E;
-            nextNeigh = Direction.SW;
+        if (Objects.isNull(v.getNeighbourInDirection(Direction.N))) {
+            nextDirection1 = DirectionUtil.getDirectionInGivenCountDirection(nextDirection1, 2);
+            nextDirection2 = DirectionUtil.getDirectionInGivenCountDirection(nextDirection2, 2);
         }
-        pointerToStart = Direction.NE;
-        Vertex current = startVertex.getNeighbourInDirection(startDir).
-                getNeighbourInDirection(nextNeigh);
 
-        // sometimes I like C old school style
-        for(int i =0;i<8; i++){
-            if(current.getLabel().equals(Label.I)) {
-                startVertex.addNeighbour(current, pointerToStart);
-            }else{
-                for (Direction direction: EnumSet.of(Direction.N, Direction.E, Direction.S, Direction.W)) {
-                    if (current.getNeighbours().containsValue(direction)){
-                        Vertex maybeF = current.getNeighbourInDirection(direction);
-                        if(maybeF.getLabel().equals(Label.F1)) {
-                            if (!maybeF.equals(startVertex)) {
-                                startVertex.addNeighbour(maybeF, direction.getOppositeDirection());
+        connectVertexIToF1(v, nextDirection1, 3, -3);
+        connectVertexIToF1(v, nextDirection1, -3, 3);
+        connectVertexIToF1(v, nextDirection2, 3, -3);
+        connectVertexIToF1(v, nextDirection2, -3, 3);
 
-                            } else {
-                                startVertex.removeNeighbour(direction.getOppositeDirection());
-                                Vertex newV = new Vertex(Label.F1,
-                                        calculateCoordinationX(direction),
-                                        calculateCoordinationY(direction));
-                                current.addNeighbour(newV, direction);
-                                startVertex.addNeighbour(newV, direction.getOppositeDirection());
-                            }
-                        }
-                    }
-                }
-            }
-            while(!current.getNeighbours().containsValue(nextNeigh)) {
-                nextNeigh = nextNeigh.getClockwiseNextDirection();
-            }
-            current = current.getNeighbourInDirection(nextNeigh);
-            pointerToStart = pointerToStart.getClockwiseNextDirection();
-        }
-        startVertex.setLabel(Label.NONE);
-        return startVertex;
+        connectVertexF1toF1(v, nextDirection1, 3, -2);
+        connectVertexF1toF1(v, nextDirection1, -3, 2);
+
+        addVertexF1(v, nextDirection1);
+        addVertexF1(v, nextDirection2);
+
+        v.setLabel(Label.NONE);
+
+        return v;
     }
 
     @Override
@@ -90,7 +66,7 @@ public class P4 extends Production {
         Direction dir1 = null;
         Direction startDir1 = null;
         Vertex firstI = null, secondV = null;
-        for (Direction d: EnumSet.of(Direction.N, Direction.S)) {
+        for (Direction d : EnumSet.of(Direction.N, Direction.S)) {
             if (v.getNeighbours().containsValue(d)) {
                 startDir1 = d;
                 dir1 = d.getClockwiseNextDirection().getClockwiseNextDirection().getClockwiseNextDirection();
@@ -99,7 +75,7 @@ public class P4 extends Production {
                 startDir1 = d;
                 dir1 = d.getClockwiseNextDirection().getClockwiseNextDirection().getClockwiseNextDirection();
             }
-            if(v.getNeighbours().containsValue(startDir1)) {
+            if (v.getNeighbours().containsValue(startDir1)) {
                 firstI = v.getNeighbourInDirection(startDir1).getNeighbourInDirection(dir1);
                 if (!firstI.getLabel().equals(Label.I)) {
                     LOGGER.debug("Couldn't apply production P4 for " + firstI.getLabel() + ", because contains wrong label");
@@ -107,7 +83,7 @@ public class P4 extends Production {
                 }
             }
 
-            if(firstI.getNeighbours().containsValue(dir1)) {
+            if (firstI.getNeighbours().containsValue(dir1)) {
                 secondV = firstI.getNeighbourInDirection(dir1);
                 if (!secondV.getLabel().equals(Label.NONE)) {
                     LOGGER.debug("Couldn't apply production P4 for " + secondV.getLabel() + ", because contains wrong label");
@@ -115,22 +91,22 @@ public class P4 extends Production {
                 }
 
             }
-            if(secondV== null){
+            if (secondV == null) {
                 LOGGER.debug("Couldn't apply production P4 for neighbour of " + firstI.getLabel() +
                         "because no neighbour in direction " + dir1);
                 return false;
             }
             Direction Fdir = dir1.getClockwiseNextDirection().getClockwiseNextDirection();
-            if(!secondV.getNeighbours().containsValue(Fdir)){
+            if (!secondV.getNeighbours().containsValue(Fdir)) {
                 LOGGER.debug("Couldn't apply production P4 for " + secondV.getLabel() + " because doesnt contain neighbour in direction " + dir1);
                 return false;
             }
-            if(secondV.getNeighbourInDirection(Fdir) == null ||
-                    !secondV.getNeighbourInDirection(Fdir.getClockwiseNextDirection()).getLabel().equals(Label.F1)){
+            if (secondV.getNeighbourInDirection(Fdir) == null ||
+                    !secondV.getNeighbourInDirection(Fdir.getClockwiseNextDirection()).getLabel().equals(Label.F1)) {
                 LOGGER.debug("Couldn't apply production P4 for " + secondV.getLabel() + " , because doesnt containt F1 neighbour.");
                 return false;
             }
-            if(secondV.getNeighbours().containsValue(dir1.getClockwiseNextDirection().getClockwiseNextDirection())) {
+            if (secondV.getNeighbours().containsValue(dir1.getClockwiseNextDirection().getClockwiseNextDirection())) {
                 Vertex thirdI = secondV.getNeighbourInDirection(
                         dir1.getClockwiseNextDirection().getClockwiseNextDirection());
                 if (!thirdI.getLabel().equals(Label.I)) {
@@ -139,10 +115,39 @@ public class P4 extends Production {
                 }
             }
         }
-
-
-
         return true;
+
+    }
+
+    private void connectVertexIToF1(Vertex v, Direction directionToNextVertex, int firstCountDirection, int secondCountDirection) {
+        Vertex neighbourInDirection = v.getNeighbourInDirection(directionToNextVertex);
+        Direction direction1 = DirectionUtil.getDirectionInGivenCountDirection(directionToNextVertex, firstCountDirection);
+
+        Vertex vertexInGivenCountDirection = neighbourInDirection.getNeighbourInDirection(direction1);
+        Direction direction2 = DirectionUtil.getDirectionInGivenCountDirection(directionToNextVertex, secondCountDirection);
+
+        vertexInGivenCountDirection.addNeighbour(v, direction2);
+    }
+
+    private void connectVertexF1toF1(Vertex v, Direction directionToNextVertex, int firstCountDirection, int secondCountDirection) {
+        Vertex neighbourInDirection = v.getNeighbourInDirection(directionToNextVertex);
+        Direction direction1 = DirectionUtil.getDirectionInGivenCountDirection(directionToNextVertex, firstCountDirection);
+
+        Vertex neighbourInDirection1 = neighbourInDirection.getNeighbourInDirection(direction1).getNeighbourInDirection(direction1);
+        Direction direction2 = DirectionUtil.getDirectionInGivenCountDirection(directionToNextVertex, secondCountDirection);
+
+        Vertex F1 = neighbourInDirection1.getNeighbourInDirection(direction2);
+        F1.addNeighbour(v, direction2);
+    }
+
+    private void addVertexF1(Vertex v, Direction nextDirection) {
+        Vertex F1 = new Vertex(Label.F1, calculateCoordinationX(nextDirection), calculateCoordinationY(nextDirection));
+
+        Vertex neighbourInDirection = v.getNeighbourInDirection(nextDirection);
+        v.removeNeighbour(nextDirection);
+        F1.addNeighbour(neighbourInDirection, nextDirection);
+
+        v.addNeighbour(F1, nextDirection);
     }
 
     private double calculateCoordinationX(Direction direction) {

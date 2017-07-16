@@ -12,7 +12,7 @@ public class P2 extends Production {
 
     private double dx;
     private double dy;
-    private Logger LOGGER = Logger.getLogger(P1.class);
+    private Logger LOGGER = Logger.getLogger(P2.class);
 
     public P2(Vertex startVertex, CyclicBarrier cyclicBarrier, double basicLength) {
         super(startVertex, cyclicBarrier, basicLength);

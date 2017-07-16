@@ -53,6 +53,6 @@ public class Vertex {
                 .filter((e -> e.getValue().equals(direction)))
                 .map(Map.Entry::getKey)
                 .findFirst()
-                .get();
+                .orElse(null);
     }
 }
